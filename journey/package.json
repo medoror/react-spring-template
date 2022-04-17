@@ -4,9 +4,15 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "open": "start-server-and-test 'cd .. && SPRING_PROFILES_ACTIVE=journey ./gradlew bootRun' http://localhost:8081 'yarn cypress:open' ",
+    "test": "start-server-and-test 'cd .. && SPRING_PROFILES_ACTIVE=journey ./gradlew bootRun' http://localhost:8081 'yarn cypress:run' "
   },
   "devDependencies": {
-    "cypress": "^9.5.4"
+    "@testing-library/cypress": "^8.0.2",
+    "cypress": "^9.5.4",
+    "start-server-and-test": "^1.14.0",
+    "typescript": "^4.6.3"
   }
 }
