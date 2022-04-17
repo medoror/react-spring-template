@@ -8,3 +8,10 @@ Built with the following spring dependencies from spring initializer:
 * Flyway Migration SQL
 
 Create backend using: yarn create react-app my-app --template typescript
+
+Create journey scaffoling using
+```
+mkdir journey
+yarn init
+yarn add cypress --dev
+```
