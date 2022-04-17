@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.plugin.ResolveMainClassName
+
 plugins {
 	id 'org.springframework.boot' version '2.6.6'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -31,4 +33,50 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+task installClient(type: Exec) {
+	inputs.file(file("client/yarn.lock"))
+	inputs.file(file("client/package.json"))
+	outputs.dir(file("client/node_modules"))
+	commandLine("yarn", "--cwd", "client", "install")
+}
+
+task buildClient(type: Exec) {
+	dependsOn("installClient")
+	inputs.dir(file("client"))
+	outputs.dir(file("client/build"))
+	commandLine("yarn", "--cwd", "client", "build")
+}
+
+task copyClient(type: Sync) {
+	dependsOn("buildClient")
+	from(file("./client/build"))
+	into(file("$buildDir/resources/main/static"))
+	doLast {
+		println("copied built client to static resources")
+	}
+}
+
+task copyClientForIntelliJ(type: Sync) {
+	dependsOn("buildClient")
+	from(file("./client/build"))
+	into(file("./src/main/resources/static"))
+	doLast {
+		println("copied built client to static resources")
+	}
+}
+
+task cleanClient(type: Delete) {
+	delete(file("./client/build"))
+	delete(file("./src/main/resources/static"))
+}
+
+tasks.withType(ResolveMainClassName) {
+	dependsOn(copyClient)
+}
+
+
+clean {
+	dependsOn(cleanClient)
 }
